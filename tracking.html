@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lacak Pro - Mailingroom</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #F8FAFC; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        
+        /* Entrance Animations */
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-enter { animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
+        .nav-glow { box-shadow: 0 15px 35px -5px rgba(59, 130, 246, 0.2); }
+
+        /* Timeline Connector */
+        .timeline-line::before {
+            content: ''; position: absolute; top: 35px; left: 19px; bottom: -15px; width: 2px; background: #E2E8F0; z-index: 0;
+        }
+        .timeline-item:last-child .timeline-line::before { display: none; }
+        
+        /* Pulse Animation */
+        @keyframes pulse-ring {
+            0% { transform: scale(0.33); }
+            80%, 100% { opacity: 0; }
+        }
+        .ring-animate { animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) infinite; }
+    </style>
+</head>
+<body class="pb-32 text-slate-800 antialiased selection:bg-blue-100">
+
+    <header class="bg-white/90 backdrop-blur-md sticky top-0 z-50 border-b border-slate-100 h-16 flex items-center px-4 shadow-sm animate-enter">
+        <button onclick="history.back()" class="w-10 h-10 rounded-full flex items-center justify-center text-slate-600 hover:bg-slate-100 transition-colors">
+            <i class="fa-solid fa-arrow-left text-lg"></i>
+        </button>
+        <h1 class="flex-grow text-center font-bold text-lg text-slate-800 mr-10">Lacak Kiriman</h1>
+    </header>
+
+    <main class="px-6 mt-6 max-w-3xl mx-auto space-y-6">
+
+        <div class="animate-enter">
+            <div class="relative flex items-center">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-blue-500">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+                <input type="text" id="resiInput" value="123/PKS/X/2025" 
+                    class="w-full bg-white text-slate-700 font-mono font-bold rounded-2xl py-4 pl-12 pr-12 outline-none border border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all shadow-sm placeholder-slate-300"
+                    placeholder="Masukkan No. Resi">
+                <button class="absolute inset-y-2 right-2 w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center text-slate-500 hover:text-slate-800 hover:bg-slate-200 transition">
+                    <i class="fa-solid fa-qrcode"></i>
+                </button>
+            </div>
+            <button onclick="lacakSurat()" id="btnLacak" class="w-full mt-3 bg-[#FF6B00] hover:bg-[#E65100] text-white font-bold py-4 rounded-2xl shadow-lg shadow-orange-200 transition-all transform active:scale-[0.98]">
+                Lacak Sekarang
+            </button>
+        </div>
+
+        <div id="emptyState" class="flex flex-col items-center justify-center py-10 animate-enter transition-all duration-500">
+            <div class="w-40 h-40 bg-slate-50 rounded-full flex items-center justify-center mb-6 relative">
+                <div class="absolute inset-0 border-4 border-slate-100 rounded-full animate-pulse"></div>
+                <i class="fa-solid fa-map-location-dot text-6xl text-slate-300"></i>
+            </div>
+            <h3 class="font-bold text-slate-700 text-lg">Lacak Posisi Surat</h3>
+            <p class="text-slate-400 text-sm text-center max-w-xs mt-1">Masukkan nomor surat atau resi untuk melihat status terkini perjalanan dokumen.</p>
+        </div>
+
+        <div id="resultState" class="hidden space-y-6 animate-enter">
+            
+            <div class="bg-white rounded-3xl p-6 shadow-xl shadow-blue-100 border border-slate-100 relative overflow-hidden">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <p class="text-xs text-slate-400 font-bold uppercase tracking-wide">Status Terkini</p>
+                        <h2 class="text-2xl font-bold text-blue-600 mt-1">Sedang Diantar</h2>
+                        <p class="text-sm text-slate-500">Estimasi tiba: <span class="font-bold text-slate-800">14:30 WIB</span></p>
+                    </div>
+                    <div class="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600 text-xl animate-bounce">
+                        <i class="fa-solid fa-truck-fast"></i>
+                    </div>
+                </div>
+
+                <div class="w-full bg-slate-100 rounded-full h-2 mb-2">
+                    <div class="bg-blue-500 h-2 rounded-full" style="width: 75%"></div>
+                </div>
+                <div class="flex justify-between text-[10px] text-slate-400 font-bold uppercase">
+                    <span>Diproses</span>
+                    <span>Diantar</span>
+                    <span>Tiba</span>
+                </div>
+            </div>
+
+            <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-slate-200 overflow-hidden shrink-0 border-2 border-white shadow-sm">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="Kurir" class="w-full h-full object-cover">
+                </div>
+                <div class="flex-grow">
+                    <h4 class="font-bold text-slate-800 text-sm">Budi Santoso</h4>
+                    <p class="text-xs text-slate-400">Kurir Logistik • B 1234 XYZ</p>
+                </div>
+                <button class="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center hover:bg-green-200 transition">
+                    <i class="fa-solid fa-phone"></i>
+                </button>
+                <button class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center hover:bg-blue-200 transition">
+                    <i class="fa-solid fa-message"></i>
+                </button>
+            </div>
+
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+                <h3 class="font-bold text-slate-800 mb-6">Riwayat Perjalanan</h3>
+                
+                <div class="pl-2">
+                    <div class="timeline-item timeline-line relative flex gap-4 pb-8">
+                        <div class="relative z-10 w-10 h-10 flex items-center justify-center shrink-0">
+                            <div class="absolute w-10 h-10 bg-blue-400 rounded-full opacity-20 ring-animate"></div>
+                            <div class="relative w-4 h-4 bg-blue-600 rounded-full border-2 border-white shadow-md"></div>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-sm">Kurir Menuju Lokasi</h4>
+                            <p class="text-xs text-slate-500 mt-1">Posisi kurir ada di Jl. Jendral Sudirman</p>
+                            <p class="text-[10px] text-slate-400 mt-1 font-mono">13:45 WIB</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item timeline-line relative flex gap-4 pb-8">
+                        <div class="relative z-10 w-10 h-10 flex items-center justify-center shrink-0">
+                            <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-400 border-2 border-white flex items-center justify-center text-xs">
+                                <i class="fa-solid fa-box"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-600 text-sm">Paket Dijemput</h4>
+                            <p class="text-xs text-slate-400 mt-1">Kurir telah mengambil dokumen dari pengirim</p>
+                            <p class="text-[10px] text-slate-400 mt-1 font-mono">13:30 WIB</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item timeline-line relative flex gap-4">
+                        <div class="relative z-10 w-10 h-10 flex items-center justify-center shrink-0">
+                            <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-400 border-2 border-white flex items-center justify-center text-xs">
+                                <i class="fa-solid fa-check"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-600 text-sm">Pesanan Dibuat</h4>
+                            <p class="text-xs text-slate-400 mt-1">Data surat masuk ke sistem</p>
+                            <p class="text-[10px] text-slate-400 mt-1 font-mono">10:00 WIB</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <div class="fixed bottom-8 left-0 right-0 z-50 flex justify-center pointer-events-none animate-enter" style="animation-delay: 0.3s;">
+        <nav class="pointer-events-auto bg-white/80 backdrop-blur-xl border border-white/60 nav-glow rounded-full pl-2 pr-6 py-2 flex items-center gap-6 shadow-2xl">
+            <a href="dashboard.html" class="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-blue-500 transition-colors rounded-full hover:bg-blue-50">
+                <i class="fa-solid fa-house text-lg"></i>
+            </a>
+            <a href="list-surat.html" class="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-blue-500 transition-colors rounded-full hover:bg-blue-50">
+                <i class="fa-solid fa-file-contract text-lg"></i>
+            </a>
+            <a href="notification.html" class="relative w-10 h-10 flex items-center justify-center text-slate-400 hover:text-blue-500 transition-colors rounded-full hover:bg-blue-50">
+                <i class="fa-solid fa-bell text-lg"></i>
+                <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
+            </a>
+            <a href="profile.html" class="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-blue-500 transition-colors rounded-full hover:bg-blue-50">
+                <i class="fa-solid fa-user text-lg"></i>
+            </a>
+        </nav>
+    </div>
+
+    <script>
+        function lacakSurat() {
+            const btn = document.getElementById('btnLacak');
+            const emptyState = document.getElementById('emptyState');
+            const resultState = document.getElementById('resultState');
+            const originalText = btn.innerHTML;
+            
+            // 1. Loading Effect
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Mencari...';
+            btn.disabled = true;
+            btn.classList.add('opacity-75');
+
+            // 2. Simulate Delay
+            setTimeout(() => {
+                emptyState.style.display = 'none';
+                resultState.classList.remove('hidden');
+                resultState.classList.add('block');
+                
+                // Reset Button (Optional: hide button if result shown)
+                btn.style.display = 'none';
+            }, 1200);
+        }
+    </script>
+</body>
+</html>

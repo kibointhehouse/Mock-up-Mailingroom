@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mailingroom Dashboard Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #F8FAFC; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-enter { animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+
+        .card-shadow { box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05); }
+        .nav-glow { box-shadow: 0 15px 35px -5px rgba(59, 130, 246, 0.2); }
+        
+        /* Chart Bar Animation */
+        @keyframes growUp { from { height: 0; } }
+        .bar-animate { animation: growUp 1s ease-out forwards; }
+    </style>
+</head>
+<body class="pb-32 text-slate-800 antialiased selection:bg-blue-100">
+
+    <div class="relative bg-white animate-enter">
+        <div class="h-2 bg-blue-600"></div>
+        <div class="bg-gradient-to-br from-blue-700 via-blue-600 to-blue-500 rounded-b-[40px] px-6 pt-4 pb-20 shadow-xl relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full -mr-16 -mt-16 blur-3xl"></div>
+            <div class="absolute bottom-0 left-0 w-40 h-40 bg-white opacity-5 rounded-full -ml-10 -mb-10 blur-2xl"></div>
+
+            <div class="relative flex justify-between items-center mb-6 z-10">
+                <div class="flex items-center gap-2 text-white/90 font-bold text-lg tracking-wide">
+                    <i class="fa-solid fa-box-open"></i> Mailingroom
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="notification.html" class="relative w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition backdrop-blur-sm border border-white/10">
+                        <i class="fa-regular fa-bell text-lg"></i>
+                        <span class="absolute top-2.5 right-3 w-2 h-2 bg-red-400 rounded-full border border-blue-600"></span>
+                    </a>
+                    <a href="profile.html" class="w-10 h-10 rounded-full p-0.5 bg-white/20 border border-white/30 backdrop-blur-sm cursor-pointer hover:scale-105 transition">
+                        <div class="w-full h-full bg-orange-500 rounded-full flex items-center justify-center text-white font-bold text-sm">K</div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="relative z-10">
+                <p id="greeting" class="text-blue-100 text-sm font-medium mb-1">Selamat Pagi,</p>
+                <h1 class="text-3xl font-bold text-white mb-6">Kresnanda 👋</h1>
+
+                <div class="relative group">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-blue-300 group-focus-within:text-blue-500 transition-colors">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                    <input type="text" placeholder="Cari nomor surat atau resi..." 
+                        class="w-full bg-white/10 backdrop-blur-md text-white placeholder-blue-200/70 rounded-2xl py-4 pl-12 pr-4 outline-none border border-white/20 focus:bg-white focus:text-slate-800 focus:placeholder-slate-400 focus:shadow-lg transition-all duration-300">
+                    <button class="absolute inset-y-2 right-2 bg-blue-500 hover:bg-blue-400 text-white w-10 h-10 rounded-xl flex items-center justify-center shadow-md transition-colors">
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <main class="px-6 -mt-12 relative z-20 max-w-5xl mx-auto space-y-8">
+
+        <section class="animate-enter delay-100">
+            <div class="bg-white p-6 rounded-3xl card-shadow border border-slate-50">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h2 class="font-bold text-slate-700">Aktivitas Surat</h2>
+                        <p class="text-xs text-slate-400">Statistik 7 hari terakhir</p>
+                    </div>
+                    <select class="bg-slate-50 text-xs font-bold text-slate-500 py-2 px-3 rounded-lg outline-none border border-transparent focus:border-blue-200">
+                        <option>Minggu Ini</option>
+                        <option>Bulan Ini</option>
+                    </select>
+                </div>
+                
+                <div class="flex items-end justify-between gap-2 h-32 pt-4 px-2">
+                    <div class="flex flex-col items-center gap-2 w-full group cursor-pointer">
+                        <div class="w-full bg-slate-100 rounded-t-lg relative h-full flex items-end overflow-hidden">
+                            <div style="height: 40%" class="w-full bg-blue-300 rounded-t-lg bar-animate group-hover:bg-blue-500 transition-colors"></div>
+                        </div>
+                        <span class="text-[10px] text-slate-400 font-medium">Sen</span>
+                    </div>
+                    <div class="flex flex-col items-center gap-2 w-full group cursor-pointer">
+                        <div class="w-full bg-slate-100 rounded-t-lg relative h-full flex items-end overflow-hidden">
+                            <div style="height: 65%" class="w-full bg-blue-300 rounded-t-lg bar-animate group-hover:bg-blue-500 transition-colors" style="animation-delay: 0.1s"></div>
+                        </div>
+                        <span class="text-[10px] text-slate-400 font-medium">Sel</span>
+                    </div>
+                    <div class="flex flex-col items-center gap-2 w-full group cursor-pointer">
+                        <div class="w-full bg-slate-100 rounded-t-lg relative h-full flex items-end overflow-hidden">
+                            <div style="height: 85%" class="w-full bg-[#FF6B00] rounded-t-lg bar-animate shadow-[0_0_15px_rgba(255,107,0,0.4)]" style="animation-delay: 0.2s"></div>
+                        </div>
+                        <span class="text-[10px] text-[#FF6B00] font-bold">Rab</span>
+                    </div>
+                    <div class="flex flex-col items-center gap-2 w-full group cursor-pointer">
+                        <div class="w-full bg-slate-100 rounded-t-lg relative h-full flex items-end overflow-hidden">
+                            <div style="height: 30%" class="w-full bg-blue-300 rounded-t-lg bar-animate group-hover:bg-blue-500 transition-colors" style="animation-delay: 0.3s"></div>
+                        </div>
+                        <span class="text-[10px] text-slate-400 font-medium">Kam</span>
+                    </div>
+                    <div class="flex flex-col items-center gap-2 w-full group cursor-pointer">
+                        <div class="w-full bg-slate-100 rounded-t-lg relative h-full flex items-end overflow-hidden">
+                            <div style="height: 55%" class="w-full bg-blue-300 rounded-t-lg bar-animate group-hover:bg-blue-500 transition-colors" style="animation-delay: 0.4s"></div>
+                        </div>
+                        <span class="text-[10px] text-slate-400 font-medium">Jum</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="animate-enter delay-200">
+            <h2 class="font-bold text-slate-700 text-lg mb-4 ml-1">Menu Utama</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                
+                <a href="form-surat.html" class="bg-white p-5 rounded-3xl card-shadow border border-slate-50 hover:border-orange-100 text-left transition-all duration-300 hover:-translate-y-1 hover:shadow-lg group block">
+                    <div class="w-12 h-12 rounded-2xl bg-orange-50 text-orange-500 flex items-center justify-center mb-3 text-lg group-hover:bg-orange-500 group-hover:text-white transition-colors duration-300">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </div>
+                    <h3 class="font-bold text-slate-800 text-sm mb-0.5">Kirim Surat</h3>
+                    <p class="text-[11px] text-slate-400 font-medium">Buat baru</p>
+                </a>
+                
+                <a href="tracking.html" class="bg-white p-5 rounded-3xl card-shadow border border-slate-50 hover:border-emerald-100 text-left transition-all duration-300 hover:-translate-y-1 hover:shadow-lg group block">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-500 flex items-center justify-center mb-3 text-lg group-hover:bg-emerald-500 group-hover:text-white transition-colors duration-300">
+                        <i class="fa-solid fa-crosshairs"></i>
+                    </div>
+                    <h3 class="font-bold text-slate-800 text-sm mb-0.5">Lacak Surat</h3>
+                    <p class="text-[11px] text-slate-400 font-medium">Cek posisi</p>
+                </a>
+
+                <a href="list-surat.html" class="bg-white p-5 rounded-3xl card-shadow border border-slate-50 hover:border-blue-100 text-left transition-all duration-300 hover:-translate-y-1 hover:shadow-lg group block">
+                    <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-500 flex items-center justify-center mb-3 text-lg group-hover:bg-blue-500 group-hover:text-white transition-colors duration-300">
+                        <i class="fa-solid fa-inbox"></i>
+                    </div>
+                    <h3 class="font-bold text-slate-800 text-sm mb-0.5">Masuk</h3>
+                    <p class="text-[11px] text-slate-400 font-medium">12 Surat</p>
+                </a>
+
+                <a href="list-surat.html" class="bg-white p-5 rounded-3xl card-shadow border border-slate-50 hover:border-rose-100 text-left transition-all duration-300 hover:-translate-y-1 hover:shadow-lg group block">
+                    <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-500 flex items-center justify-center mb-3 text-lg group-hover:bg-rose-500 group-hover:text-white transition-colors duration-300">
+                        <i class="fa-solid fa-box-archive"></i>
+                    </div>
+                    <h3 class="font-bold text-slate-800 text-sm mb-0.5">Keluar</h3>
+                    <p class="text-[11px] text-slate-400 font-medium">8 Surat</p>
+                </a>
+            </div>
+        </section>
+
+        <section class="animate-enter delay-300">
+            <div class="flex justify-between items-end mb-4 ml-1">
+                <h2 class="font-bold text-slate-700 text-lg">Baru Ditambahkan</h2>
+                <a href="list-surat.html" class="text-xs font-bold text-blue-600 hover:text-blue-700">Lihat Semua</a>
+            </div>
+            
+            <div class="flex flex-col gap-3">
+                <a href="detail-surat.html" class="bg-white p-4 rounded-2xl card-shadow border border-slate-50 flex items-center gap-4 hover:shadow-lg hover:border-blue-100 hover:scale-[1.01] transition-all duration-300 cursor-pointer block">
+                    <div class="w-12 h-12 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 shrink-0">
+                        <i class="fa-regular fa-file-lines text-xl"></i>
+                    </div>
+                    <div class="flex-grow min-w-0">
+                        <h4 class="font-bold text-sm text-slate-800 truncate mb-0.5">Perjanjian Kerja Sama Proyek A</h4>
+                        <div class="flex items-center gap-2 text-xs text-slate-400">
+                            <span class="font-mono bg-slate-100 px-1.5 rounded">#123</span>
+                            <span>•</span>
+                            <span>Hari Ini</span>
+                        </div>
+                    </div>
+                    <span class="px-3 py-1.5 bg-orange-50 text-orange-600 text-[10px] font-bold rounded-full whitespace-nowrap border border-orange-100">
+                        Menunggu
+                    </span>
+                </a>
+
+                <a href="detail-surat.html" class="bg-white p-4 rounded-2xl card-shadow border border-slate-50 flex items-center gap-4 hover:shadow-lg hover:border-blue-100 hover:scale-[1.01] transition-all duration-300 cursor-pointer block">
+                    <div class="w-12 h-12 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 shrink-0">
+                        <i class="fa-regular fa-file-lines text-xl"></i>
+                    </div>
+                    <div class="flex-grow min-w-0">
+                        <h4 class="font-bold text-sm text-slate-800 truncate mb-0.5">Surat Edaran Libur Nasional</h4>
+                        <div class="flex items-center gap-2 text-xs text-slate-400">
+                            <span class="font-mono bg-slate-100 px-1.5 rounded">#321</span>
+                            <span>•</span>
+                            <span>Kemarin</span>
+                        </div>
+                    </div>
+                    <span class="px-3 py-1.5 bg-emerald-50 text-emerald-600 text-[10px] font-bold rounded-full whitespace-nowrap border border-emerald-100">
+                        Terkirim
+                    </span>
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <div class="fixed bottom-8 left-0 right-0 z-50 flex justify-center pointer-events-none animate-enter delay-300">
+        <nav class="pointer-events-auto bg-white/80 backdrop-blur-xl border border-white/60 nav-glow rounded-full pl-2 pr-6 py-2 flex items-center gap-6 shadow-2xl">
+            <button class="flex items-center gap-2 bg-blue-600 text-white px-5 py-3 rounded-full font-semibold text-sm transition-all shadow-lg shadow-blue-200 hover:bg-blue-700 hover:scale-105 active:scale-95">
+                <i class="fa-solid fa-house"></i>
+                <span>Beranda</span>
+            </button>
+            <a href="list-surat.html" class="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-blue-500 transition-colors rounded-full hover:bg-blue-50">
+                <i class="fa-solid fa-file-contract text-lg"></i>
+            </a>
+            <a href="notification.html" class="relative w-10 h-10 flex items-center justify-center text-slate-400 hover:text-blue-500 transition-colors rounded-full hover:bg-blue-50">
+                <i class="fa-solid fa-bell text-lg"></i>
+                <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
+            </a>
+            <a href="profile.html" class="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-blue-500 transition-colors rounded-full hover:bg-blue-50">
+                <i class="fa-solid fa-user text-lg"></i>
+            </a>
+        </nav>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const hour = new Date().getHours();
+            const greetingElement = document.getElementById('greeting');
+            let greetingText = 'Selamat Pagi,';
+
+            if (hour >= 11 && hour < 15) {
+                greetingText = 'Selamat Siang,';
+            } else if (hour >= 15 && hour < 18) {
+                greetingText = 'Selamat Sore,';
+            } else if (hour >= 18) {
+                greetingText = 'Selamat Malam,';
+            }
+            
+            greetingElement.innerText = greetingText;
+        });
+    </script>
+
+</body>
+</html>
